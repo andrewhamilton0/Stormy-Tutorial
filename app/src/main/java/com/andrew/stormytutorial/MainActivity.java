@@ -2,8 +2,12 @@ package com.andrew.stormytutorial;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -23,11 +27,30 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        try {
-            run();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (isNetworkAvailable()) {
+            try {
+                run();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+
+        boolean isAvailable = false;
+
+        if (networkInfo != null && networkInfo.isConnected()){
+            isAvailable = true;
+        }
+        else{
+            Toast.makeText(this, R.string.network_unavailable_message,
+                    Toast.LENGTH_LONG).show();
+        }
+
+        return isAvailable;
     }
 
     String apiKey = "3ab49fc3c2b6e93bf90275c0df750f11";
@@ -36,9 +59,10 @@ public class MainActivity extends AppCompatActivity {
     String forecastUrl = "https://api.openweathermap.org/data/2.5/weather?lat=" + latitude +
             "&lon=" + longitude + "&appid=" + apiKey + "&units=imperial";
 
+
+
+
     private final OkHttpClient client = new OkHttpClient();
-
-
 
     public void run() throws Exception {
         Request request = new Request.Builder()
