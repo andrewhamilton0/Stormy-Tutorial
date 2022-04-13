@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     String apiKey = "3ab49fc3c2b6e93bf90275c0df750f11";
     double latitude = 37.8267 ;
     double longitude = -122.4233;
-    String forecastUrl = "https://api.openweathermap.org/data/2.5/weather?lat=" + latitude +
+    String forecastUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude +
             "&lon=" + longitude + "&appid=" + apiKey + "&units=imperial";
 
 
