@@ -109,11 +109,23 @@ public class MainActivity extends AppCompatActivity {
 
         JSONObject current = forecast.getJSONObject("current");
         double temp = current.getDouble("temp");
+
+        CurrentWeather currentWeather = new CurrentWeather();
+
         currentWeather.setHumidity(current.getDouble("humidity"));
         currentWeather.setTemperature(current.getDouble("temp"));
+        currentWeather.setTime(current.getLong("dt"));
+        currentWeather.setIcon(current.getJSONArray("weather")
+                .getJSONObject(0).getString("icon"));
+        currentWeather.setLocationLabel("Alcatraz Island, CA");
+        currentWeather.setPrecipitationChance(forecast.getJSONArray("hourly")
+                .getJSONObject(0).getDouble("pop"));
+        currentWeather.setTimeZone(timezone);
+
+        Log.i(TAG, currentWeather.getFormattedTime());
         Log.i(TAG, "From JSON: " + temp);
 
-        return null;
+        return currentWeather;
     }
 
     private void alertUserAboutError() {

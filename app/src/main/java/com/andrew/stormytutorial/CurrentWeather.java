@@ -1,5 +1,9 @@
 package com.andrew.stormytutorial;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 public class CurrentWeather {
 
     private String locationLabel;
@@ -9,6 +13,15 @@ public class CurrentWeather {
     private double humidity;
     private  double precipitationChance;
     private String summary;
+    private String timeZone;
+
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
+    }
 
     public String getLocationLabel() {
         return locationLabel;
@@ -28,6 +41,16 @@ public class CurrentWeather {
 
     public long getTime() {
         return time;
+    }
+
+    public String getFormattedTime(){
+        SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
+
+        formatter.setTimeZone(TimeZone.getTimeZone(timeZone));
+
+        Date dateTime = new Date(time * 1000);
+
+        return formatter.format(dateTime);
     }
 
     public void setTime(long time) {
