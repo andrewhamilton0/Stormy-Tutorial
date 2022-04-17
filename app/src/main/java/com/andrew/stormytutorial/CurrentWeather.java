@@ -32,11 +32,59 @@ public class CurrentWeather {
     }
 
     public String getIcon() {
+
         return icon;
     }
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public int getIconID(){
+
+        //01d, 01n, 02d, 02n few clouds, 03d, 03n scattered clouds, 04d,
+        // 04n broken clouds, 09d, 09n shower rain, 10d, 10n rain, 11d, 11n thunderstorm,
+        // 13d, 13n snow, 50d, 50 n mist
+
+        int iconID = R.drawable.clear_day;
+
+        switch(icon){
+            case "01d":
+                iconID = R.drawable.clear_day;
+                break;
+            case "01n":
+                iconID = R.drawable.clear_night;
+                break;
+            case "02d":
+                iconID = R.drawable.partly_cloudy;
+                break;
+            case "02n":
+            case "03n":
+            case "04n":
+                iconID = R.drawable.cloudy_night;
+                break;
+            case "03d":
+            case "04d":
+                iconID = R.drawable.cloudy;
+                break;
+            case "09d":
+            case "09n":
+            case "10d":
+            case "10n":
+            case "11d":
+            case "11n":
+                iconID = R.drawable.rain;
+                break;
+            case "13d":
+            case "13n":
+                iconID = R.drawable.snow;
+                break;
+            case "50d":
+            case "50n":
+                iconID = R.drawable.fog;
+                break;
+        }
+        return iconID;
     }
 
     public long getTime() {
