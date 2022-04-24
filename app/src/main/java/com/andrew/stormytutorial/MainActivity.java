@@ -1,15 +1,22 @@
 package com.andrew.stormytutorial;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.andrew.stormytutorial.databinding.ActivityMainBinding;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -27,23 +34,36 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
+    private ActivityMainBinding binding;
     private CurrentWeather currentWeather;
+    private ImageView iconImageView;
+
+    private double latitude = 37.8267 ;
+    private double longitude = -122.4233;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        getForecast();
+    }
+
+    private void getForecast(){
+
+        binding = DataBindingUtil.setContentView(MainActivity.this,
+                R.layout.activity_main);
 
         TextView attributeText = findViewById(R.id.attribution);
         attributeText.setMovementMethod(LinkMovementMethod.getInstance());
+        iconImageView = findViewById(R.id.iconImageView);
 
-        if (isNetworkAvailable()) {
-            try {
-                run();
-            } catch (Exception e) {
-                e.printStackTrace();
+
+            if (isNetworkAvailable()) {
+                try {
+                    run();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        }
     }
 
     private boolean isNetworkAvailable() {
@@ -64,8 +84,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     String apiKey = "3ab49fc3c2b6e93bf90275c0df750f11";
-    double latitude = 37.8267 ;
-    double longitude = -122.4233;
     String forecastUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude +
             "&lon=" + longitude + "&appid=" + apiKey + "&units=imperial";
 
@@ -91,6 +109,27 @@ public class MainActivity extends AppCompatActivity {
                         Log.v(TAG, jsonData);
                         if (response.isSuccessful()){
                             currentWeather = getCurrentDetails(jsonData);
+
+                            CurrentWeather displayWeather = new CurrentWeather(
+                                    currentWeather.getLocationLabel(),
+                                    currentWeather.getIcon(),
+                                    currentWeather.getTime(),
+                                    currentWeather.getTemperature(),
+                                    currentWeather.getHumidity(),
+                                    currentWeather.getPrecipitationChance(),
+                                    currentWeather.getSummary(),
+                                    currentWeather.getTimeZone()
+                            );
+                            binding.setWeather(displayWeather);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Drawable drawable = getResources().getDrawable(displayWeather.getIconID());
+                                    iconImageView.setImageDrawable(drawable);
+                                }
+                            });
+
+
                         }
                         else{
                             alertUserAboutError();
@@ -126,6 +165,8 @@ public class MainActivity extends AppCompatActivity {
         currentWeather.setPrecipitationChance(forecast.getJSONArray("hourly")
                 .getJSONObject(0).getDouble("pop"));
         currentWeather.setTimeZone(timezone);
+        currentWeather.setSummary(current.getJSONArray("weather")
+                .getJSONObject(0).getString("description"));
 
         Log.i(TAG, currentWeather.getFormattedTime());
         Log.i(TAG, "From JSON: " + temp);
@@ -138,5 +179,9 @@ public class MainActivity extends AppCompatActivity {
         dialog.show(getFragmentManager(), "error_dialog");
     }
 
+    public void refreshOnClick(View view){
+        Toast.makeText(this, "Refreshing Data", Toast.LENGTH_LONG).show();
+        getForecast();
+    }
 
 }

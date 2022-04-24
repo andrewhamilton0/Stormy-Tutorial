@@ -4,7 +4,10 @@ plugins {
 
 android {
     compileSdkVersion 32
-    buildToolsVersion "30.0.2"
+
+    buildFeatures {
+        dataBinding true
+    }
 
     defaultConfig {
         applicationId "com.andrew.stormytutorial"

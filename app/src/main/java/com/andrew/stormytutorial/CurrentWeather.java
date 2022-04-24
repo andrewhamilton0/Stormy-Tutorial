@@ -6,6 +6,22 @@ import java.util.TimeZone;
 
 public class CurrentWeather {
 
+    public CurrentWeather() {
+    }
+
+    public CurrentWeather(String locationLabel, String icon, long time, double temperature,
+                          double humidity, double precipitationChance, String summary,
+                          String timeZone) {
+        this.locationLabel = locationLabel;
+        this.icon = icon;
+        this.time = time;
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.precipitationChance = precipitationChance;
+        this.summary = summary;
+        this.timeZone = timeZone;
+    }
+
     private String locationLabel;
     private String icon;
     private long time;
@@ -105,7 +121,9 @@ public class CurrentWeather {
         this.time = time;
     }
 
-    public double getTemperature() {
+    public int getTemperature() {
+        int temperature = (int) (Math.round(this.temperature));
+
         return temperature;
     }
 
@@ -121,7 +139,8 @@ public class CurrentWeather {
         this.humidity = humidity;
     }
 
-    public double getPrecipitationChance() {
+    public int getPrecipitationChance() {
+        int precipitationChance = (int) Math.round(this.precipitationChance);
         return precipitationChance;
     }
 
